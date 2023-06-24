@@ -5,6 +5,8 @@ using NewsAPI;
 using System.Net;
 using Noticias.Model.Helpers;
 using Noticias.Model;
+using Microsoft.EntityFrameworkCore;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ApiNoticias.Controllers
 {
@@ -12,78 +14,58 @@ namespace ApiNoticias.Controllers
     [Route("[controller]")]
     public class NoticiasController : ControllerBase
     {
+        private readonly Context _context;
         private readonly ILogger<NoticiasController> _logger;
 
-        public NoticiasController(ILogger<NoticiasController> logger)
+        public NoticiasController(ILogger<NoticiasController> logger, Context context)
         {
             _logger = logger;
+            _context = context;
         }
 
 
         [HttpGet, Route("Tecnologia")]
         public List<Noticia> GetNoticiasTecnologia()
         {
-            var listaNoticias = Noticias(Enums.Categoria.Tecnologia);
-
-            return listaNoticias;
+            return Noticias(Enums.Categoria.Tecnologia);
         }
+
+        /// <summary>
+        //public async Task<ActionResult<IEnumerable<Noticia>>> GetNoticiasTecnologia()
+        //{
+        //    Noticias(Enums.Categoria.Tecnologia);
+
+        //    _ = _context.AddRangeAsync(teste);
+        //    await _context.SaveChangesAsync();
+
+        //    return await listaNoticias;
+        //}
+        /// </summary>
+
 
         [HttpGet, Route("Urgente")]
         public List<Noticia> GetNoticiasUrgente()
         {
-            var listaNoticias = Noticias(Enums.Categoria.Urgente);
-            return listaNoticias;
+            return Noticias(Enums.Categoria.Urgente);
         }
 
         [HttpGet, Route("Financeiro")]
         public List<Noticia> GetNoticiasFinanceiro()
         {
-            var listaNoticias = Noticias(Enums.Categoria.Financeiro);
-            return listaNoticias;
+            return Noticias(Enums.Categoria.Financeiro);
+            
         }
 
         [HttpGet, Route("Politica")]
         public List<Noticia> GetNoticiasPolitica()
-        {
-            var listaNoticias = Noticias(Enums.Categoria.Politica);
-            return listaNoticias;
+        {   
+            return Noticias(Enums.Categoria.Politica);
         }
 
-        List<Noticia> Noticias(Enums.Categoria categoria)
-        {
-
-            HttpResponseMessage response;
-            List<Noticia> listaNoticias = new List<Noticia>();
-
-            var data = DateTime.Now;
-            var novaData = data.AddDays(-1);
-
-            var newsApiClient = new NewsApiClient("1ee5f753635a417199eda96741385288");
-            var articlesResponse = newsApiClient.GetEverything(new EverythingRequest
-            {
-                Q = categoria.GetDescription(),
-                SortBy = SortBys.Popularity,
-                Language = Languages.PT,
-                From = novaData
-            });
-            if (articlesResponse.Status == Statuses.Ok)
-            {
-                foreach (var article in articlesResponse.Articles)
-                {
-                    var noticia = new Noticia
-                    {
-                        Titulo = article.Title,
-                        Autor = article.Author,
-                        Descricao = article.Description,
-                        DataPublicacao = article.PublishedAt,
-                        UrlImagem = article.UrlToImage,
-                        Categoria = categoria,
-                    };
-
-                    listaNoticias.Add(noticia);
-                }
-            }
-            return listaNoticias;
-        }
+         List<Noticia> Noticias(Enums.Categoria categoria)
+         {
+            var noticas = _context.Noticias.Where(a => a.Categoria == categoria).ToList();
+            return noticas;
+         }
     }
 }
