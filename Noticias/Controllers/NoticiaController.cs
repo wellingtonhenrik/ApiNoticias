@@ -7,6 +7,8 @@ using Noticias.Model.Helpers;
 using Noticias.Model;
 using Microsoft.EntityFrameworkCore;
 using static System.Net.Mime.MediaTypeNames;
+using Noticias.Model.HangFire;
+using Newtonsoft.Json.Schema;
 
 namespace Noticias.Controllers
 {
@@ -22,10 +24,27 @@ namespace Noticias.Controllers
             _logger = logger;
             _context = context;
         }
+        //[HttpGet, Route("aa")]
+        //public ActionResult Teste()
+        //{
+        //    return new JsonResult(new Noticia());
+        //}
+
+        [HttpGet, Route("Todas as noticias")]
+        public ActionResult GetNoticias()
+        {
+            return Noticias(Enums.Categoria.Todas, true);
+        }
+
+        [HttpGet, Route("Get pelo Titulo")]
+        public ActionResult GetNoticia(string? titulo)
+        {
+            return GetTitulo(titulo);
+        }
 
 
         [HttpGet, Route("Tecnologia")]
-        public List<Noticia> GetNoticiasTecnologia()
+        public ActionResult GetNoticiasTecnologia()
         {
             return Noticias(Enums.Categoria.Tecnologia);
         }
@@ -44,28 +63,47 @@ namespace Noticias.Controllers
 
 
         [HttpGet, Route("Urgente")]
-        public List<Noticia> GetNoticiasUrgente()
+        public ActionResult GetNoticiasUrgente()
         {
             return Noticias(Enums.Categoria.Urgente);
         }
 
         [HttpGet, Route("Financeiro")]
-        public List<Noticia> GetNoticiasFinanceiro()
+        public ActionResult GetNoticiasFinanceiro()
         {
             return Noticias(Enums.Categoria.Financeiro);
             
         }
 
         [HttpGet, Route("Politica")]
-        public List<Noticia> GetNoticiasPolitica()
+        public ActionResult GetNoticiasPolitica()
         {   
             return Noticias(Enums.Categoria.Politica);
         }
 
-         List<Noticia> Noticias(Enums.Categoria categoria)
+         ActionResult Noticias (Enums.Categoria categoria, bool todasCategorias = false)
          {
-            var noticas = _context.Noticias.Where(a => a.Categoria == categoria).ToList();
-            return noticas;
-         }
+            if (todasCategorias)
+            {
+                var noticas = _context.Noticias.ToList();
+                return new JsonResult(noticas);
+            }
+            else
+            {
+                var noticas = _context.Noticias.Where(a => a.Categoria == categoria).ToList();
+                return new JsonResult(noticas);
+            }
+        }
+         ActionResult GetTitulo(string titulo)
+         {
+
+            if (string.IsNullOrWhiteSpace(titulo)) return new JsonResult("Nenhum titulo foi digitado");
+
+            var noticia = _context.Noticias.Where(a => a.Titulo.Contains(titulo)).ToList();
+
+            if(!noticia.Any()) return new JsonResult("Não foram encontradas noticias com esse titulo");
+
+            return new JsonResult(noticia);
+        }
     }
 }

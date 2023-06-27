@@ -4,6 +4,7 @@
     {
         public enum Categoria
         {
+            Todas = 0,
             Biticoins = 1,
             Financeiro = 2,
             Politica = 3,
