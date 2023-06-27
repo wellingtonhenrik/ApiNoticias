@@ -1,13 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Azure;
+using Azure.Core;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Noticias.Model.Helpers;
 
 namespace Noticias.Model.HangFire
 {
-    public class Noticas
+    public class NoticasHangfire
     {
         private readonly Context _context;
 
-        public Noticas(Context context)
+        public NoticasHangfire(Context context)
         {
             _context = context;
         }
@@ -23,6 +26,14 @@ namespace Noticias.Model.HangFire
                 await _context.SaveChangesAsync();
 
             }
+        }
+
+        public async Task DeleteNoticasAntigas(DateTime dateTime)
+        {
+          var noticias = await _context.Noticias.Where(a => a.DataCadastro <= dateTime).ToListAsync();
+
+          _context.Noticias.RemoveRange(noticias);
+          await _context.SaveChangesAsync();
         }
     }
 }

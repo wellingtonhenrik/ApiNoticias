@@ -53,11 +53,11 @@ namespace Noticias.Controllers
             return new JsonResult(messagem);
         }
 
-        [HttpDelete, Route("Deletar Usuario")]
+        [HttpDelete, Route("Deletar")]
         public ActionResult DeletarUsuario(string login)
         {
             var usuario =  _context.Usuarios.FirstOrDefault(a => a.Login.Equals(login));
-            var messagem = usuario.Deletar();
+            var messagem = usuario.Deletar(_context);
             return new JsonResult(messagem);
         }
 

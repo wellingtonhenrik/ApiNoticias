@@ -2,7 +2,7 @@
 
 namespace Noticias.Model
 {
-    public class Noticia
+    public class Noticia : IPropriedadesPadrao
     {
 
         private readonly Context _context;
@@ -12,6 +12,8 @@ namespace Noticias.Model
 
         public Noticia()
         {
+            DataCadastro = DateTime.Now;
+            Ativo = true;
         }
         public Noticia(Context context, ILogger<Noticia> logger, int noticiaId, Enums.Categoria categoria, string? titulo, string? autor, string? descricao, string? url, string? urlImagem, DateTime? dataPublicacao)
         {
@@ -25,6 +27,8 @@ namespace Noticias.Model
             Url = url;
             UrlImagem = urlImagem;
             DataPublicacao = dataPublicacao;
+            DataCadastro = DateTime.Now;
+            Ativo = true;
         }
         public int NoticiaId { get; set; }
         public Enums.Categoria Categoria { get; set; }
@@ -34,5 +38,7 @@ namespace Noticias.Model
         public string? Url { get; set; }
         public string? UrlImagem { get; set; }
         public DateTime? DataPublicacao { get; set; }
+        public DateTime DataCadastro { get; set; }
+        public bool Ativo { get; set; }
     }
 }

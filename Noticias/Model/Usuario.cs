@@ -3,13 +3,15 @@ using System.Runtime.CompilerServices;
 
 namespace Noticias.Model
 {
-    public class Usuario
+    public class Usuario : IPropriedadesPadrao
     {
         private readonly Context _context;
         private readonly ILogger<Usuario> _logger;
 
         public Usuario()
         {
+            DataCadastro = DateTime.Now;
+            Ativo = true;
         }
         public Usuario(Context context, ILogger<Usuario> logger, int usuarioId, string nome, string sobrenome, string login, string email, Enums.Sexo sexo, string imagemPessoa, string senha)
         {
@@ -21,6 +23,10 @@ namespace Noticias.Model
             Sexo = sexo;
             ImagemPessoa = imagemPessoa;
             Senha = senha;
+            DataCadastro = DateTime.Now;
+            Ativo = true;
+            _context = context;
+            _logger = logger;
         }
 
         public int UsuarioId { get; set; }
@@ -32,18 +38,22 @@ namespace Noticias.Model
         public string ImagemPessoa { get; set; }
         public string Senha { get; set; }
 
+        public DateTime DataCadastro { get; set; }
+
+        public bool Ativo { get; set; }
+
         public string ValidacaoCadastro(Context context)
         {
             try
             {
-                var usuarioLogin = _context.Usuarios.FirstOrDefault(a => a.Login.Equals(Login));
-                var usuarioEmail = _context.Usuarios.FirstOrDefault(a => a.Email.Equals(Email));
+                var usuarioLogin = context.Usuarios.FirstOrDefault(a => a.Login.Equals(Login));
+                var usuarioEmail = context.Usuarios.FirstOrDefault(a => a.Email.Equals(Email));
 
                 if (usuarioLogin != null) return "Já existe usuario com esse login";
                 if (usuarioEmail != null) return "Já existe usuario com esse this";
 
-                _context.Usuarios.Add(this);
-                _context.SaveChanges();
+                context.Usuarios.Add(this);
+                context.SaveChanges();
 
                 return "Operação realizada com sucesso";
             }
@@ -57,15 +67,15 @@ namespace Noticias.Model
         {
             try
             {
-                var usuarioBase = _context.Usuarios.FirstOrDefault(a => a.UsuarioId == 1);
+                var usuarioBase = context.Usuarios.FirstOrDefault(a => a.UsuarioId == 1);
 
                 if (usuarioBase != null)
                 {
                     usuarioBase.Senha = Senha;
                     usuarioBase.ImagemPessoa = ImagemPessoa;
                     usuarioBase.Email = Email;
-                    _context.Usuarios.Update(usuarioBase);
-                    _context.SaveChanges();
+                    context.Usuarios.Update(usuarioBase);
+                    context.SaveChanges();
                     return "Operacação realizada com sucesso";
                 }
                 else
@@ -80,14 +90,14 @@ namespace Noticias.Model
             }
         }
 
-        public string Deletar()
+        public string Deletar(Context context)
         {
             try
             {
                 if (!string.IsNullOrWhiteSpace(Login))
                 {
-                    _context.Usuarios.Remove(this);
-                    _context.SaveChanges();
+                    context.Usuarios.Remove(this);
+                    context.SaveChanges();
 
                     return "Operacação realizada com sucesso";
                 }
