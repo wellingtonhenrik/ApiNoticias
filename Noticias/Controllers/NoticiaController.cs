@@ -8,7 +8,7 @@ using Noticias.Model;
 using Microsoft.EntityFrameworkCore;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace ApiNoticias.Controllers
+namespace Noticias.Controllers
 {
     [ApiController]
     [Route("[controller]")]
