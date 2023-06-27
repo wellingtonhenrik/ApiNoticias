@@ -28,37 +28,37 @@ namespace Noticias.Controllers
         }
 
         [HttpGet, Route("Usuario")]
-        public Usuario GetUsuario(int id)
+        public ActionResult GetUsuario(int id)
         {
             var usuario = _context.Usuarios.FirstOrDefault(a => a.UsuarioId == id);
 
-            return usuario;
+            return new JsonResult(usuario);
         }
 
         [HttpPost, Route("Cadastro")]
-        public string Cadastro(Usuario usuario)
+        public ActionResult Cadastro(Usuario usuario)
         {
             var messagem =  usuario.ValidacaoCadastro(_context);
 
-            return messagem;
+            return new JsonResult(messagem);
         }
 
         [HttpPut, Route("Atualizar")]
 
-        public string Atualizar(Usuario usuario)
+        public ActionResult Atualizar(Usuario usuario)
         {
 
             var messagem = usuario.ValidarAtualizacao(_context);
 
-            return messagem;
+            return new JsonResult(messagem);
         }
 
         [HttpDelete, Route("Deletar Usuario")]
-        public string DeletarUsuario(string login)
+        public ActionResult DeletarUsuario(string login)
         {
             var usuario =  _context.Usuarios.FirstOrDefault(a => a.Login.Equals(login));
             var messagem = usuario.Deletar();
-            return messagem;
+            return new JsonResult(messagem);
         }
 
     }
