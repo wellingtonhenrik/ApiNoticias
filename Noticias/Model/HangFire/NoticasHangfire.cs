@@ -30,7 +30,7 @@ namespace Noticias.Model.HangFire
 
         public async Task DeleteNoticasAntigas(DateTime dateTime)
         {
-          var noticias = await _context.Noticias.Where(a => a.DataCadastro <= dateTime).ToListAsync();
+          var noticias = await _context.Noticias.Where(a => a.DataCadastro < dateTime).ToListAsync();
 
           _context.Noticias.RemoveRange(noticias);
           await _context.SaveChangesAsync();
