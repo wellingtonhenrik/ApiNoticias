@@ -14,11 +14,12 @@ namespace Noticias.Controllers
 
 
             ////////////////Implementação dos Jobs///////////////////////////
-            RecurringJob.AddOrUpdate<NoticasHangfire>("Consulta noticas de tecnologia", x => x.Executar(Enums.Categoria.Tecnologia), Cron.Hourly, timezene);
+            RecurringJob.AddOrUpdate<NoticasHangfire>("Consulta noticas de tecnologia", x => x.Executar(Enums.Categoria.Tecnologia), Cron.Hourly(), timezene);
             RecurringJob.AddOrUpdate<NoticasHangfire>("Consulta noticas de Financeiro", x => x.Executar(Enums.Categoria.Financeiro), Cron.Hourly, timezene);
             RecurringJob.AddOrUpdate<NoticasHangfire>("Consulta noticas de Urgente", x => x.Executar(Enums.Categoria.Urgente), Cron.Hourly, timezene);
             RecurringJob.AddOrUpdate<NoticasHangfire>("Consulta noticas de Politica", x => x.Executar(Enums.Categoria.Politica), Cron.Hourly, timezene);
-            RecurringJob.AddOrUpdate<NoticasHangfire>("Delete noticas antigas", x => x.DeleteNoticasAntigas(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day - 1)), Cron.Hourly, timezene);
+            RecurringJob.AddOrUpdate<NoticasHangfire>("Delete noticas antigas", x => x.DeleteNoticasAntigas(DateTime.Now), Cron.Hourly, timezene);
+          
             /////////////////////////////////////////////////////////////////
         }
     }

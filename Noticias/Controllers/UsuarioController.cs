@@ -57,9 +57,30 @@ namespace Noticias.Controllers
         public ActionResult DeletarUsuario(string login)
         {
             var usuario =  _context.Usuarios.FirstOrDefault(a => a.Login.Equals(login));
+            if (usuario == null) return new JsonResult("Usuario não existe");
             var messagem = usuario.Deletar(_context);
             return new JsonResult(messagem);
         }
 
+
+        [HttpGet, Route("Teste")]
+        public ActionResult Teste()
+        {
+            var usuario = _context.Usuarios.FirstOrDefault();
+
+            return new JsonResult(usuario);
+        }
+
+        [HttpPost, Route("CadastroEmMassa")]
+        public ActionResult CadastroEmMassa(List<Usuario> usuarios)
+        {
+            var messagem = "";
+            foreach(var usuario in usuarios)
+            {
+                 messagem = usuario.ValidacaoCadastro(_context);
+            }
+
+            return new JsonResult(messagem);
+        }
     }
 }

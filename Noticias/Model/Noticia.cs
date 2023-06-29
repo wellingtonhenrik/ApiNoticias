@@ -1,4 +1,5 @@
-﻿using Noticias.Model.Helpers;
+﻿using Newtonsoft.Json;
+using Noticias.Model.Helpers;
 
 namespace Noticias.Model
 {
@@ -40,5 +41,6 @@ namespace Noticias.Model
         public DateTime? DataPublicacao { get; set; }
         public DateTime DataCadastro { get; set; }
         public bool Ativo { get; set; }
+        public string NomeCategoria { get; set; }
     }
 }

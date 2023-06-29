@@ -31,6 +31,10 @@ GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute
 var app = builder.Build();
 
 //configuração refente ao hangfire
+app.UseHangfireDashboard("/hangfire", new DashboardOptions()
+{
+});
+
 HangFireConfig.Start();
 
 // Configure the HTTP request pipeline.

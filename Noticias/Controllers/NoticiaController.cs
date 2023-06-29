@@ -24,17 +24,6 @@ namespace Noticias.Controllers
             _logger = logger;
             _context = context;
         }
-        //[HttpGet, Route("aa")]
-        //public ActionResult Teste()
-        //{
-        //    return new JsonResult(new Noticia());
-        //}
-
-        [HttpGet, Route("Todas as noticias")]
-        public ActionResult GetNoticias()
-        {
-            return Noticias(Enums.Categoria.Todas, true);
-        }
 
         [HttpGet, Route("Get pelo Titulo")]
         public ActionResult GetNoticia(string? titulo)
@@ -42,50 +31,18 @@ namespace Noticias.Controllers
             return GetTitulo(titulo);
         }
 
-
-        [HttpGet, Route("Tecnologia")]
-        public ActionResult GetNoticiasTecnologia()
+        [HttpGet, Route("Noticias Salvas no banco")]
+        public ActionResult GetNoticias(Enums.Categoria categoria)
         {
-            return Noticias(Enums.Categoria.Tecnologia);
+            return Noticias(categoria);
         }
 
-        /// <summary>
-        //public async Task<ActionResult<IEnumerable<Noticia>>> GetNoticiasTecnologia()
-        //{
-        //    Noticias(Enums.Categoria.Tecnologia);
-
-        //    _ = _context.AddRangeAsync(teste);
-        //    await _context.SaveChangesAsync();
-
-        //    return await listaNoticias;
-        //}
-        /// </summary>
-
-
-        [HttpGet, Route("Urgente")]
-        public ActionResult GetNoticiasUrgente()
+        ActionResult Noticias(Enums.Categoria categoria, bool todasCategorias = false)
         {
-            return Noticias(Enums.Categoria.Urgente);
-        }
-
-        [HttpGet, Route("Financeiro")]
-        public ActionResult GetNoticiasFinanceiro()
-        {
-            return Noticias(Enums.Categoria.Financeiro);
-            
-        }
-
-        [HttpGet, Route("Politica")]
-        public ActionResult GetNoticiasPolitica()
-        {   
-            return Noticias(Enums.Categoria.Politica);
-        }
-
-         ActionResult Noticias (Enums.Categoria categoria, bool todasCategorias = false)
-         {
             if (todasCategorias)
             {
                 var noticas = _context.Noticias.ToList();
+
                 return new JsonResult(noticas);
             }
             else
@@ -94,16 +51,22 @@ namespace Noticias.Controllers
                 return new JsonResult(noticas);
             }
         }
-         ActionResult GetTitulo(string titulo)
-         {
+        ActionResult GetTitulo(string titulo)
+        {
 
             if (string.IsNullOrWhiteSpace(titulo)) return new JsonResult("Nenhum titulo foi digitado");
 
             var noticia = _context.Noticias.Where(a => a.Titulo.Contains(titulo)).ToList();
 
-            if(!noticia.Any()) return new JsonResult("Não foram encontradas noticias com esse titulo");
+            if (!noticia.Any()) return new JsonResult("Não foram encontradas noticias com esse titulo");
 
             return new JsonResult(noticia);
+        }
+
+        [HttpGet, Route("Noticias")]
+        public ActionResult GetNoticias(string categoria)
+        {
+            return new JsonResult(ConsultaNoticas.Noticias(Enums.Categoria.Todas, categoria));
         }
     }
 }
