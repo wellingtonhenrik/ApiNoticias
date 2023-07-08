@@ -25,13 +25,13 @@ namespace Noticias.Controllers
             _context = context;
         }
 
-        [HttpGet, Route("Get pelo Titulo")]
+        [HttpGet, Route("GetByTitulo")]
         public ActionResult GetNoticia(string? titulo)
         {
             return GetTitulo(titulo);
         }
 
-        [HttpGet, Route("Noticias Salvas no banco")]
+        [HttpGet, Route("NoticiasSalvasNoBanco")]
         public ActionResult GetNoticias(Enums.Categoria categoria)
         {
             return Noticias(categoria);
@@ -67,6 +67,14 @@ namespace Noticias.Controllers
         public ActionResult GetNoticias(string categoria)
         {
             return new JsonResult(ConsultaNoticas.Noticias(Enums.Categoria.Todas, categoria));
+        }
+
+
+        [HttpGet, Route("TesteReact")]
+        public ActionResult TesteReact()
+        {
+            string categoria = "Tecnologia";
+            return new JsonResult(ConsultaNoticas.Noticias(Enums.Categoria.Todas, categoria).Take(5));
         }
     }
 }

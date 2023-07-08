@@ -12,8 +12,9 @@ namespace Noticias.Model
         {
             DataCadastro = DateTime.Now;
             Ativo = true;
+            NoticiaFavorita NoticiaFavorita = new NoticiaFavorita();
         }
-        public Usuario(Context context, ILogger<Usuario> logger, int usuarioId, string nome, string sobrenome, string login, string email, Enums.Sexo sexo, string imagemPessoa, string senha)
+        public Usuario(Context context, ILogger<Usuario> logger, int usuarioId, string nome, string sobrenome, string login, string email, Enums.Sexo sexo, string imagemPessoa, string senha, NoticiaFavorita noticiaFavorita = null)
         {
             UsuarioId = usuarioId;
             Nome = nome;
@@ -25,12 +26,13 @@ namespace Noticias.Model
             Senha = senha;
             DataCadastro = DateTime.Now;
             Ativo = true;
+            NoticiaFavorita = noticiaFavorita;
             _context = context;
             _logger = logger;
         }
 
         public int UsuarioId { get; set; }
-        public string Nome { get; set; }    
+        public string Nome { get; set; }
         public string Sobrenome { get; set; }
         public string Login { get; set; }
         public string Email { get; set; }
@@ -41,6 +43,7 @@ namespace Noticias.Model
         public DateTime DataCadastro { get; set; }
 
         public bool Ativo { get; set; }
+        public virtual NoticiaFavorita NoticiaFavorita {get;set;}
 
         public string ValidacaoCadastro(Context context)
         {

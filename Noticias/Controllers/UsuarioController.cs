@@ -30,7 +30,7 @@ namespace Noticias.Controllers
         [HttpGet, Route("Usuario")]
         public ActionResult GetUsuario(int id)
         {
-            var usuario = _context.Usuarios.FirstOrDefault(a => a.UsuarioId == id);
+            var usuario = _context.Usuarios.Include(a=>a.NoticiaFavorita).FirstOrDefault(a => a.UsuarioId == id);
 
             return new JsonResult(usuario);
         }
